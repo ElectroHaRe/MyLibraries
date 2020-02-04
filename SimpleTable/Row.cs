@@ -5,47 +5,31 @@ using System.Linq;
 
 namespace SimpleTable
 {
-    public class Row : IEnumerable
+    public class Row : IEnumerable<ICell>
     {
         private Dictionary<string, ICell> cells = new Dictionary<string, ICell>();
 
         public int Count => cells.Count;
 
-        public object this[string columnName]
+        public ICell this[string columnName]
         {
             get
             {
-                if (!cells.ContainsKey(columnName))
+                if (!Contains(columnName))
                     throw new ArgumentException($"Cell with columnName '{columnName}' does not exists");
 
-                return cells[columnName].Value;
-            }
-
-            set
-            {
-                if (!cells.ContainsKey(columnName))
-                    throw new ArgumentException($"Cell with columnName '{columnName}' does not exists");
-
-                cells[columnName].Value = value;
+                return cells[columnName];
             }
         }
 
-        public object this[int index]
+        public ICell this[int index]
         {
             get
             {
                 if (index < 0 || index >= cells.Count)
                     throw new IndexOutOfRangeException($"Cells count = {cells.Count} , index = '{index}'");
 
-                return cells.Values.ToList()[index].Value;
-            }
-
-            set
-            {
-                if (index < 0 || index >= cells.Count)
-                    throw new IndexOutOfRangeException($"Cells count = {cells.Count} , index = '{index}'");
-
-                this[cells.Keys.ToList()[index]] = value;
+                return cells.Values.ToList()[index];
             }
         }
 
@@ -53,7 +37,7 @@ namespace SimpleTable
         {
             foreach (var column in columns)
             {
-                if (cells.ContainsKey(column.Name))
+                if (Contains(column.Name))
                     throw new ArgumentException($"Cell with columnName '{column.Name}' already exists");
 
                 cells.Add(column.Name, column.CreateCell());
@@ -63,12 +47,12 @@ namespace SimpleTable
         public bool Contains(string columnName) => cells.ContainsKey(columnName);
 
         public IColumn GetColumn(string columnName)
-            => cells.ContainsKey(columnName) ? cells[columnName].Column
+            => Contains(columnName) ? cells[columnName].Column
                : throw new ArgumentException($"Cell with columnName '{columnName}' does not exists");
 
         internal void RemoveCell(string columnName)
         {
-            if (cells.ContainsKey(columnName))
+            if (Contains(columnName))
                 throw new ArgumentException($"Cell with columnName '{columnName}' does not exists");
 
             cells.Remove(columnName);
@@ -76,14 +60,22 @@ namespace SimpleTable
 
         internal void AddCell(ICell cell)
         {
-            if (cells.ContainsKey(cell.Column.Name))
+            if (Contains(cell.Column.Name))
                 throw new ArgumentException($"Cell with columnName '{cell.Column.Name}' already exists");
 
             cells.Add(cell.Column.Name, cell);
         }
 
-        public object[] GetValues() => (from cell in cells select cell.Value.Value).ToArray();
+        public static explicit operator object[](Row row) => (from cell in row.cells select cell.Value.Value).ToArray();
 
-        public IEnumerator GetEnumerator() => GetValues().GetEnumerator();
+        public IEnumerator<ICell> GetEnumerator()
+        {
+            foreach (var cell in cells)
+            {
+                yield return cell.Value;
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

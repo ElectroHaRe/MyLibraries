@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SimpleTable
+﻿namespace SimpleTable
 {
     public interface ICell
     {
@@ -8,30 +6,23 @@ namespace SimpleTable
         IColumn Column { get; }
     }
 
-    internal struct Cell<T> : ICell
+    internal class Cell<T> : ICell
     {
-        private T value;
         private readonly Column<T> column;
 
-        public T Value { get => value; set => this.value = value; }
+        public T Value { get; set; }
         public Column<T> Column => column;
 
         object ICell.Value
         {
-            get => value;
-            set
-            {
-                if (value is T)
-                    this.value = (T)value;
-                else
-                    throw new ArgumentException($"Value type does not match cell type | Value = {value}", $"value = {value}");
-            }              
+            get => Value;
+            set => this.Value = (T)value;
         }
 
         IColumn ICell.Column => Column;
 
-        internal Cell(Column<T> column) => (this.column, value) = (column, column.DefaultValue);
+        internal Cell(Column<T> column) => (this.column, Value) = (column, column.DefaultValue);
 
-        internal Cell(Column<T> column, T value) => (this.column, this.value) = (column, value);
+        internal Cell(Column<T> column, T value) => (this.column, this.Value) = (column, value);
     }
 }

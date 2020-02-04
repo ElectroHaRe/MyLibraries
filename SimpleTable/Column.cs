@@ -11,12 +11,12 @@ namespace SimpleTable
         ICell CreateCell();
     }
 
-    internal struct Column<T> : IColumn
+    internal class Column<T> : IColumn
     {
         private readonly string name;
         private readonly T defaultValue;
 
-        public string Name => Name;
+        public string Name => name;
         public Type ValueType => typeof(T);
         internal T DefaultValue => defaultValue;
         object IColumn.DefaultValue => defaultValue;

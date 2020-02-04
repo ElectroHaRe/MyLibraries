@@ -24,17 +24,9 @@ namespace SimpleTable
         public IColumn this[string columnName] => columns.Find((item) => item.Name == columnName) ??
                                                   throw new ArgumentException($"Column with name '{columnName}' does not exists");
 
-        public object this[int rowIndex, int columnIndex]
-        {
-            get => this[rowIndex][columnIndex];
-            set => this[rowIndex][columnIndex] = value;
-        }
+        public ICell this[int rowIndex, int columnIndex] => this[rowIndex][columnIndex];
 
-        public object this[int rowIndex, string columnName]
-        {
-            get => this[rowIndex][columnName];
-            set => this[rowIndex][columnName] = value;
-        }
+        public ICell this[int rowIndex, string columnName] => this[rowIndex][columnName];
 
         public int this[Row row] => rows.FindIndex((item) => item == row);
 
@@ -68,7 +60,7 @@ namespace SimpleTable
             {
                 if (row.Contains(column.Name))
                 {
-                    newRow[column.Name] = row[column.Name];
+                    newRow[column.Name].Value = row[column.Name].Value;
                     counter++;
                 }
             }
@@ -86,7 +78,7 @@ namespace SimpleTable
             var columnNames = from column in table.columns
                               select column.Name as object;
             var rowValues = from row in table.rows
-                            select row.GetValues();
+                            select (object[])row;
 
             array.Add(columnNames.ToArray());
             array.AddRange(rowValues);
