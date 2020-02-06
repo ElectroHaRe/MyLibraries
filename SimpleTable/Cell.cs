@@ -1,28 +1,25 @@
 ﻿namespace SimpleTable
 {
-    public interface ICell
+    public abstract class Cell
     {
-        object Value { get; set; }
-        IColumn Column { get; }
+        public virtual object Value { get; set; }
+        public virtual Column Column { get; }
     }
 
-    internal class Cell<T> : ICell
+    internal class Cell<T> : Cell
     {
         private readonly Column<T> column;
+        private T value;
 
-        public T Value { get; set; }
-        public Column<T> Column => column;
-
-        object ICell.Value
-        {
-            get => Value;
-            set => this.Value = (T)value;
-        }
-
-        IColumn ICell.Column => Column;
+        public override object Value { get => value; set => this.value = (T)value; }
+        public override Column Column => column;
 
         internal Cell(Column<T> column) => (this.column, Value) = (column, column.DefaultValue);
 
         internal Cell(Column<T> column, T value) => (this.column, this.Value) = (column, value);
+
+        internal T GetTypefiedValue() => value;
+
+        internal Column<T> GetTypefiedColumn() => column;
     }
 }

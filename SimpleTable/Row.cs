@@ -5,13 +5,13 @@ using System.Linq;
 
 namespace SimpleTable
 {
-    public class Row : IEnumerable<ICell>
+    public class Row : IEnumerable<Cell>
     {
-        private Dictionary<string, ICell> cells = new Dictionary<string, ICell>();
+        private Dictionary<string, Cell> cells = new Dictionary<string, Cell>();
 
         public int Count => cells.Count;
 
-        public ICell this[string columnName]
+        public Cell this[string columnName]
         {
             get
             {
@@ -22,7 +22,7 @@ namespace SimpleTable
             }
         }
 
-        public ICell this[int index]
+        public Cell this[int index]
         {
             get
             {
@@ -33,7 +33,7 @@ namespace SimpleTable
             }
         }
 
-        public Row(params IColumn[] columns)
+        public Row(params Column[] columns)
         {
             foreach (var column in columns)
             {
@@ -46,7 +46,7 @@ namespace SimpleTable
 
         public bool Contains(string columnName) => cells.ContainsKey(columnName);
 
-        public IColumn GetColumn(string columnName)
+        public Column GetColumn(string columnName)
             => Contains(columnName) ? cells[columnName].Column
                : throw new ArgumentException($"Cell with columnName '{columnName}' does not exists");
 
@@ -58,7 +58,7 @@ namespace SimpleTable
             cells.Remove(columnName);
         }
 
-        internal void AddCell(ICell cell)
+        internal void AddCell(Cell cell)
         {
             if (Contains(cell.Column.Name))
                 throw new ArgumentException($"Cell with columnName '{cell.Column.Name}' already exists");
@@ -68,7 +68,7 @@ namespace SimpleTable
 
         public static explicit operator object[](Row row) => (from cell in row.cells select cell.Value.Value).ToArray();
 
-        public IEnumerator<ICell> GetEnumerator()
+        public IEnumerator<Cell> GetEnumerator()
         {
             foreach (var cell in cells)
             {

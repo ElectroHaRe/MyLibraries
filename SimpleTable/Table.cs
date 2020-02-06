@@ -10,23 +10,23 @@ namespace SimpleTable
     {
         public readonly string Name;
 
-        private List<IColumn> columns = new List<IColumn>();
+        private List<Column> columns = new List<Column>();
         private List<Row> rows = new List<Row>();
 
         public int ColumnCount => columns.Count;
         public int RowCount => rows.Count;
 
-        public ReadOnlyCollection<IColumn> Columns => columns.AsReadOnly();
+        public ReadOnlyCollection<Column> Columns => columns.AsReadOnly();
 
         public Row this[int rowIndex] => rowIndex >= 0 && rowIndex < RowCount ? rows[rowIndex]
                                          : throw new IndexOutOfRangeException($"Count = {RowCount} , rowIndex = {rowIndex}");
 
-        public IColumn this[string columnName] => columns.Find((item) => item.Name == columnName) ??
+        public Column this[string columnName] => columns.Find((item) => item.Name == columnName) ??
                                                   throw new ArgumentException($"Column with name '{columnName}' does not exists");
 
-        public ICell this[int rowIndex, int columnIndex] => this[rowIndex][columnIndex];
+        public Cell this[int rowIndex, int columnIndex] => this[rowIndex][columnIndex];
 
-        public ICell this[int rowIndex, string columnName] => this[rowIndex][columnName];
+        public Cell this[int rowIndex, string columnName] => this[rowIndex][columnName];
 
         public int this[Row row] => rows.FindIndex((item) => item == row);
 
@@ -88,7 +88,7 @@ namespace SimpleTable
 
         public bool Contains(string columnName) => columns.Any((item) => item.Name == columnName);
 
-        public IColumn GetColumn(int index) => index >= 0 && index < ColumnCount ? columns[index]
+        public Column GetColumn(int index) => index >= 0 && index < ColumnCount ? columns[index]
                                                 : throw new IndexOutOfRangeException($"Count = {ColumnCount} , rowIndex = {index}");
 
         public int GetColumnPosition(string columnName) => columns.FindIndex((item) => item.Name == columnName);

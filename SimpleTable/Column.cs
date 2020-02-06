@@ -2,31 +2,31 @@
 
 namespace SimpleTable
 {
-    public interface IColumn
+    public abstract class Column
     {
-        string Name { get; }
-        Type ValueType { get; }
-        object DefaultValue { get; }
+        public virtual string Name { get; protected set; }
 
-        ICell CreateCell();
+        public virtual Type ValueType => DefaultValue.GetType();
+
+        public virtual object DefaultValue { get; protected set; }
+
+        public override string ToString() => $"{Name} ({ValueType})";
+
+        public abstract Cell CreateCell();
     }
 
-    internal class Column<T> : IColumn
+    internal class Column<T> : Column
     {
-        private readonly string name;
-        private readonly T defaultValue;
+        internal Column(string name, T defaultValue)
+        {
+            Name = name;
+            DefaultValue = defaultValue;
+        }
 
-        public string Name => name;
-        public Type ValueType => typeof(T);
-        internal T DefaultValue => defaultValue;
-        object IColumn.DefaultValue => defaultValue;
+        public override Cell CreateCell() => CreateTypefiedCell();
 
-        internal Column(string name, T defaultValue) => (this.name, this.defaultValue) = (name, defaultValue);
+        internal T GetTypefiedDefaultValue() => (T)DefaultValue;
 
-        public override string ToString() => $"{name} ({ValueType})";
-
-        internal Cell<T> CreateCell() => new Cell<T>(this);
-
-        ICell IColumn.CreateCell() => CreateCell();
+        internal Cell<T> CreateTypefiedCell() => new Cell<T>(this);
     }
 }
