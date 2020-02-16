@@ -52,7 +52,7 @@ namespace SimpleTable
 
         internal void RemoveCell(string columnName)
         {
-            if (Contains(columnName))
+            if (!Contains(columnName))
                 throw new ArgumentException($"Cell with columnName '{columnName}' does not exists");
 
             cells.Remove(columnName);
