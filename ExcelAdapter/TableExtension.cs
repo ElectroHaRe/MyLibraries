@@ -117,7 +117,7 @@ namespace ExcelAdapter
                 table.ToExcel(excelPackage, tableOptions,
                     (progressForTable) =>
                     progressChanged?.Invoke(calculateProgress(progress, progressForTable, coeff)));
-                progress += 0.99 * coeff;
+                progress += 99 * coeff;
             }
 
             progressChanged?.Invoke(100);
