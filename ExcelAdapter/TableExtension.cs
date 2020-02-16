@@ -29,7 +29,7 @@ namespace ExcelAdapter
             var excelPackage = new ExcelPackage(new FileInfo(savePath));
             table.ToExcel(excelPackage, tableOptions, (currentProgress) => progressChanged?.Invoke(currentProgress * 0.99));
             excelPackage.Save();
-            progressChanged?.Invoke(1);
+            progressChanged?.Invoke(100);
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace ExcelAdapter
             var excelPackage = new ExcelPackage(new FileInfo(savePath));
             tables.ToExcel(excelPackage, tableOptions, (currentProgress) => progressChanged?.Invoke(currentProgress * 0.99));
             excelPackage.Save();
-            progressChanged?.Invoke(1);
+            progressChanged?.Invoke(100);
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace ExcelAdapter
                 progress += 0.99 * coeff;
             }
 
-            progressChanged?.Invoke(1);
+            progressChanged?.Invoke(100);
             return excelPackage.Workbook.Worksheets;
 
             static double calculateProgress(double currentProgress, double progressForTable, double coeff) =>
