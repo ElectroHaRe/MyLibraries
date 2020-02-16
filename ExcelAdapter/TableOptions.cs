@@ -34,7 +34,7 @@ namespace ExcelAdapter
             VerticalAligment = ExcelVerticalAlignment.Center;
         }
 
-        public void ConfigurateTable(ExcelWorksheet worksheet, int rowCount, int columnCount, Action<double> progressChanged = null)
+        public void ConfigurateSheet(ExcelWorksheet worksheet, int rowCount, int columnCount, Action<double> progressChanged = null)
         {
             double cellsCount = rowCount * columnCount + 1;
             int counter = 0;

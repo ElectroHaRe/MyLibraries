@@ -54,7 +54,7 @@ namespace ExcelAdapter
         {
             var workSheet = excelPackage.Workbook.Worksheets.Add(table.Name);
             workSheet.Cells.LoadFromArrays((List<object[]>)table).AutoFitColumns();
-            tableOptions.ConfigurateTable(workSheet, table.RowCount + 1, table.ColumnCount, progressChanged);
+            tableOptions.ConfigurateSheet(workSheet, table.RowCount + 1, table.ColumnCount, progressChanged);
             return workSheet;
         }
 
